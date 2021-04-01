@@ -2,7 +2,6 @@ package com.cubezytech.fuelrefill.Utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,7 +31,6 @@ public class Const {
     public static String currentTimeStamp1 = "";
 
     public static void clearData() {
-        vehicalNo = "";
         carDriver = "";
         beforeRefill = "";
         afterRefill = "";

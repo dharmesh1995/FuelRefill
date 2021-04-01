@@ -1,9 +1,5 @@
 package com.cubezytech.fuelrefill.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -24,7 +23,6 @@ import com.cubezytech.fuelrefill.BaseActivity;
 import com.cubezytech.fuelrefill.BuildConfig;
 import com.cubezytech.fuelrefill.Model.FuelHistory.DataItem;
 import com.cubezytech.fuelrefill.Model.FuelHistory.FuelHistoryResponse;
-import com.cubezytech.fuelrefill.Model.VehicalList.VehicleListResponse;
 import com.cubezytech.fuelrefill.R;
 import com.cubezytech.fuelrefill.Utils.Const;
 import com.google.gson.Gson;
@@ -33,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 public class FuelHistoryActivity extends BaseActivity {
@@ -118,6 +117,7 @@ public class FuelHistoryActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Collections.reverse(fuelHistoryResponse.getData());
                                     fuelHistoryAdapter.addAll(fuelHistoryResponse.getData());
                                     runOnUiThread(() -> {
                                         rl_main.setVisibility(View.GONE);
