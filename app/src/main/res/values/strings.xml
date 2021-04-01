@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Fuel Refill</string>
+
+    <string name="vw_rationale_storage">Need Reading Storage Permission for Picking Files</string>
+    <string name="new_fuel_refill">New Fuel Refill</string>
+    <string name="fuel_refill_history">Fuel Refill History</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="fuel_refill_for">Fuel Refill for</string>
+</resources>
