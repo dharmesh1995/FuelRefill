@@ -57,13 +57,14 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     private static boolean isFlash = false;
 
     CameraView camera;
+
+    ImageView img_flash;
+    FaceOverlayView mFaceView;
     private final Camera.FaceDetectionListener faceDetectionListener = (faces, camera) -> {
         Log.e("LLLL_onFaceDetection", "Number of Faces:" + faces.length);
         // Update the view now!
         mFaceView.setFaces(faces);
     };
-    ImageView img_flash;
-    FaceOverlayView mFaceView;
     boolean flag = false, flash_flag = false;
     private String from = "";
     private Camera mCamera;
