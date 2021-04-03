@@ -33,6 +33,7 @@
             app:cameraGestureLongTap="none"
             app:cameraGesturePinch="zoom"
             app:cameraFacing="back"
+            app:cameraFlash="off"
             app:cameraGestureScrollHorizontal="filterControl1"
             app:cameraGestureScrollVertical="exposureCorrection"
             app:cameraPictureSnapshotMetering="true"
@@ -48,11 +49,20 @@
             android:background="@color/purple_500">
 
             <ImageView
+                android:id="@+id/img_front_camera"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:layout_toLeftOf="@id/img_camera"
+                android:src="@drawable/ic_front_camera" />
+
+            <ImageView
                 android:id="@+id/img_camera"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_camera"/>
+                android:src="@drawable/ic_camera" />
 
             <ImageView
                 android:id="@+id/img_flash"

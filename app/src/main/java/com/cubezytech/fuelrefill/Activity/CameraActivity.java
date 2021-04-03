@@ -3,6 +3,8 @@ package com.cubezytech.fuelrefill.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.hardware.Camera;
 import android.media.MediaActionSound;
@@ -20,7 +22,6 @@ import androidx.annotation.Nullable;
 
 import com.cubezytech.fuelrefill.BaseActivity;
 import com.cubezytech.fuelrefill.BuildConfig;
-import com.cubezytech.fuelrefill.Pref.SharedPrefrance;
 import com.cubezytech.fuelrefill.R;
 import com.cubezytech.fuelrefill.Utils.Const;
 import com.otaliastudios.cameraview.CameraException;
@@ -52,20 +53,22 @@ import static android.os.Build.VERSION.SDK_INT;
 public class CameraActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener {
 
     private final static CameraLogger LOG = CameraLogger.create(BuildConfig.APPNAME);
+    private static boolean isFront = false;
+    private static boolean isFlash = false;
 
     CameraView camera;
-    ImageView img_camera, img_gallery;
+    private final Camera.FaceDetectionListener faceDetectionListener = (faces, camera) -> {
+        Log.e("LLLL_onFaceDetection", "Number of Faces:" + faces.length);
+        // Update the view now!
+        mFaceView.setFaces(faces);
+    };
     ImageView img_flash;
     FaceOverlayView mFaceView;
     boolean flag = false, flash_flag = false;
     private String from = "";
     private Camera mCamera;
     private long mCaptureTime;
-    private Camera.FaceDetectionListener faceDetectionListener = (faces, camera) -> {
-        Log.e("LLLL_onFaceDetection", "Number of Faces:" + faces.length);
-        // Update the view now!
-        mFaceView.setFaces(faces);
-    };
+    ImageView img_camera, img_gallery, img_front_camera;
 
 
     @Override
@@ -85,6 +88,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         img_camera = findViewById(R.id.img_camera);
         img_gallery = findViewById(R.id.img_gallery);
         img_flash = findViewById(R.id.img_flash);
+        img_front_camera = findViewById(R.id.img_front_camera);
 
         if (SDK_INT >= 23) {
             camera.setEngine(Engine.CAMERA2);
@@ -95,18 +99,14 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         camera.addCameraListener(new Listener());
         camera.setFacing(Facing.BACK);
 
-        if (SharedPrefrance.getFlash(CameraActivity.this).equals("OFF")) {
-            img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_off));
-            camera.setFlash(Flash.OFF);
-        } else if (SharedPrefrance.getFlash(CameraActivity.this).equals("ON")) {
-            camera.setFlash(Flash.ON);
-            img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_on));
-        }
+        img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_off));
+        camera.setFlash(Flash.OFF);
 
         // OnClick
         img_camera.setOnClickListener(this);
         img_flash.setOnClickListener(this);
         img_gallery.setOnClickListener(this);
+        img_front_camera.setOnClickListener(this);
 
     }
 
@@ -168,22 +168,31 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         if (v.getId() == R.id.img_camera) {
             camera.setMode(Mode.PICTURE);
             capturePictureSnapshot();
-
         } else if (v.getId() == R.id.img_gallery) {
-            Intent intent = new Intent(CameraActivity.this,AlbumActivity.class);
-            intent.putExtra("from",from);
+            Intent intent = new Intent(CameraActivity.this, AlbumActivity.class);
+            intent.putExtra("from", from);
             startActivity(intent);
         } else if (v.getId() == R.id.img_flash) {
+            runOnUiThread(() -> {
+                if (camera.getFlash() == Flash.OFF) {
+                    img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_on));
+                    camera.setFlash(Flash.TORCH);
+                    isFlash = true;
+                } else {
+                    isFlash = false;
+                    camera.setFlash(Flash.OFF);
+                    img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_off));
+                }
+            });
+        } else if (v.getId() == R.id.img_front_camera) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 runOnUiThread(() -> {
-                    if (camera.getFlash() == Flash.ON) {
-                        SharedPrefrance.setFlash(CameraActivity.this, "OFF");
-                        img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_off));
-                        camera.setFlash(Flash.OFF);
-                    } else if (camera.getFlash() == Flash.OFF) {
-                        SharedPrefrance.setFlash(CameraActivity.this, "ON");
-                        img_flash.setImageDrawable(CameraActivity.this.getResources().getDrawable(R.drawable.ic_flash_on));
-                        camera.setFlash(Flash.ON);
+                    if (isFront) {
+                        camera.setFacing(Facing.BACK);
+                        isFront = false;
+                    } else {
+                        camera.setFacing(Facing.FRONT);
+                        isFront = true;
                     }
                 });
             }
@@ -206,12 +215,10 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         }
         mCaptureTime = System.currentTimeMillis();
         message("Capturing picture snapshot...", false);
-        if (SharedPrefrance.getFlash(CameraActivity.this).equalsIgnoreCase(String.valueOf(Flash.OFF))) {
-            camera.setFlash(Flash.OFF);
-        } else if (SharedPrefrance.getFlash(CameraActivity.this).equalsIgnoreCase(String.valueOf(Flash.AUTO))) {
-            camera.setFlash(Flash.AUTO);
+        if (isFlash) {
+            camera.setFlash(Flash.TORCH);
         } else
-            camera.setFlash(Flash.ON);
+            camera.setFlash(Flash.OFF);
 
         camera.setPictureMetering(true);
         camera.takePictureSnapshot();
@@ -242,6 +249,34 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         } else {
             LOG.e(content);
         }
+    }
+
+    private String SaveImage(Bitmap finalBitmap, File samplefile) {
+
+        File file = new File(samplefile.getParentFile().getAbsolutePath(), "." + samplefile.getName());
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            out.flush();
+            out.close();
+
+            if (samplefile.exists()) {
+                boolean isDelete = Const.delete(CameraActivity.this, samplefile);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CameraActivity.this, FewRefilleActivity.class);
+        intent.putExtra("path", "");
+        startActivity(intent);
+        finish();
     }
 
     private class Listener extends CameraListener {
@@ -306,20 +341,23 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
                 MediaActionSound sound = new MediaActionSound();
                 Log.e("LLLL_filepath: ", filePath);
 
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                String filePath1 = SaveImage(bitmap, new File(filePath));
+
                 switch (from) {
                     case "carDriver":
-                        Const.carDriver = filePath;
+                        Const.carDriver = filePath1;
                         break;
                     case "beforeRefill":
-                        Const.beforeRefill = filePath;
+                        Const.beforeRefill = filePath1;
                         break;
                     case "afterRefill":
-                        Const.afterRefill = filePath;
+                        Const.afterRefill = filePath1;
                         break;
                 }
 
                 Intent intent = new Intent(CameraActivity.this, FewRefilleActivity.class);
-                intent.putExtra("path", filePath);
+                intent.putExtra("path", filePath1);
                 startActivity(intent);
                 finish();
 
@@ -364,14 +402,5 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
             message("Zoom:" + newValue, false);
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(CameraActivity.this,FewRefilleActivity.class);
-        intent.putExtra("path","");
-        startActivity(intent);
-        finish();
     }
 }
