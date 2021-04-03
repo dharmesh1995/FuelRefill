@@ -50,11 +50,11 @@
 
             <ImageView
                 android:id="@+id/img_front_camera"
+                android:layout_toLeftOf="@id/img_camera"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="@dimen/_30sdp"
-                android:layout_toLeftOf="@id/img_camera"
                 android:src="@drawable/ic_front_camera" />
 
             <ImageView
