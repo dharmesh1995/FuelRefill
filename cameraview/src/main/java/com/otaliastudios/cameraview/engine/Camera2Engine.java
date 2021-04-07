@@ -369,6 +369,7 @@ public class Camera2Engine extends CameraEngine implements ImageReader.OnImageAv
             public void run() {
                 try {
                     if (mRepeatingRequestBuilder != null) {
+                        mRepeatingRequestBuilder.addTarget(mPreviewStreamSurface);
                         mSession.setRepeatingRequest(mRepeatingRequestBuilder.build(),
                                 mRepeatingRequestCallback, mBackgroundHandler);
                     }

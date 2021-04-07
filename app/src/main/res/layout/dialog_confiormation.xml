@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#4C000000"
+    android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10.0dip"
+        android:background="@color/white"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="5.0dip"
+        card_view:cardElevation="5.0dip"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/toastMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8.0dip"
+                android:layout_marginTop="8.0dip"
+                android:paddingTop="@dimen/_10sdp"
+                android:text="Fuel Refill Successfully"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13sdp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/tvOk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/image_background"
+                    android:backgroundTint="#FF9A3E"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_30sdp"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:scaleType="fitXY"
+                    android:text="OK"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

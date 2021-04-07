@@ -19,8 +19,10 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginLeft="@dimen/_15sdp"/>
 
+
         <com.otaliastudios.cameraview.CameraView
             android:id="@+id/camera"
+            android:visibility="gone"
             android:layout_above="@+id/rl_bottom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

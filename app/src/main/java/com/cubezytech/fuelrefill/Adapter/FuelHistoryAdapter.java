@@ -1,7 +1,6 @@
 package com.cubezytech.fuelrefill.Adapter;
 
 import android.app.Activity;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,9 @@ import com.cubezytech.fuelrefill.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class FuelHistoryAdapter extends RecyclerView.Adapter<FuelHistoryAdapter.MyClassView> {
 
@@ -47,7 +43,7 @@ public class FuelHistoryAdapter extends RecyclerView.Adapter<FuelHistoryAdapter.
             String dateString = dataItem.getRefilledOnIST();
 
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
             Date date = inputFormat.parse(dateString);
             String formattedDate = outputFormat.format(date);
             System.out.println(formattedDate); // prints 10-04-2018
@@ -56,7 +52,7 @@ public class FuelHistoryAdapter extends RecyclerView.Adapter<FuelHistoryAdapter.
 //            Date date = sdf.parse(dateString);
 //
 //            long startDate = date.getTime();
-//            String dateString1 = DateFormat.format("dd-MM-yyyy hh:mm:ss", startDate).toString();
+//            String dateString1 = DateFormat.format("dd-MMM-yyyy hh:mm a", startDate).toString();
             holder.tvDate.setText(formattedDate);
         } catch (ParseException e) {
             e.printStackTrace();

@@ -8,15 +8,29 @@
     tools:context=".Activity.MainActivity">
 
     <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="@dimen/_150sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:src="@drawable/locanix_logo"
-        android:layout_marginTop="?actionBarSize"
+        android:id="@+id/imgBack"
+        android:layout_width="?actionBarSize"
+        android:layout_height="?actionBarSize"
+        android:padding="@dimen/_11sdp"
+        android:src="@drawable/ic_left_arrow" />
+
+    <TextView
+        android:id="@+id/tvVehicalNol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRefill"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:fontFamily="@font/sf_ui_display_bold"
+        android:text="AS0534CE06"
+        android:textColor="@color/black"
         android:layout_centerInParent="true"
-        android:layout_alignParentTop="true"/>
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <ImageView
+        android:id="@+id/imgVector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_home_group"
@@ -37,6 +51,7 @@
             android:id="@+id/cvNewRefill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/_8sdp"
             android:layout_marginBottom="@dimen/_2sdp">
 
@@ -72,6 +87,7 @@
             android:id="@+id/cvRefillHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/_8sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_15sdp">

@@ -155,12 +155,15 @@
                     android:id="@+id/etVolume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="0"
+                    android:hint="0.00"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/text_color"
                     android:paddingHorizontal="@dimen/_15sdp"
                     android:background="@drawable/edit_background"
                     android:paddingVertical="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_13sdp"
-                    android:layout_marginHorizontal="@dimen/_15sdp"/>
+                    android:layout_marginHorizontal="@dimen/_15sdp" />
 
                 <TextView
                     android:layout_below="@+id/tvRefill"
