@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cubezytech.fuelrefill">
+    package="com.locanix.fuelrefill">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera2" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -31,12 +34,6 @@
             android:name=".Activity.FuelHistoryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.AlbumChildActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.AlbumActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activity.FewRefilleActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -48,9 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activity.CameraActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.MainActivity"
             android:screenOrientation="portrait" />

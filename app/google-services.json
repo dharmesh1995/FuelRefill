@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1022208958860",
+    "firebase_url": "https://locanix.firebaseio.com",
+    "project_id": "locanix",
+    "storage_bucket": "locanix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022208958860:android:75eb256f284534e4ef76a9",
+        "android_client_info": {
+          "package_name": "com.locanix.fms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022208958860-9ifs0ju1q3or9ippmgocagau1nhb2i6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2xPKWX7TVjzK_UOzZlES6I0CPvExQS_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022208958860-9ifs0ju1q3or9ippmgocagau1nhb2i6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022208958860:android:c985dc78caf033dbef76a9",
+        "android_client_info": {
+          "package_name": "com.locanix.fuelrefill"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022208958860-9ifs0ju1q3or9ippmgocagau1nhb2i6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2xPKWX7TVjzK_UOzZlES6I0CPvExQS_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022208958860-9ifs0ju1q3or9ippmgocagau1nhb2i6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

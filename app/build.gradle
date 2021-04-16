@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.cubezytech.fuelrefill"
+        applicationId "com.locanix.fuelrefill"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -73,5 +73,10 @@ dependencies {
 
     implementation project(':cameraview')
 
-    implementation 'com.yandex.android:mobmetricalib:3.18.0'
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 }
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
