@@ -35,23 +35,24 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.locanix.fuelrefill.BuildConfig;
+import com.locanix.fuelrefill.DBHelper.DBHelper;
 import com.locanix.fuelrefill.Model.EntryFuel.EntryFuelResponse;
 import com.locanix.fuelrefill.Model.UploadImage.UploadFileResponse;
 import com.locanix.fuelrefill.R;
+import com.locanix.fuelrefill.Utils.ConnectionDetector;
 import com.locanix.fuelrefill.Utils.Const;
 
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+import es.dmoral.toasty.Toasty;
 
 public class FewRefilleActivity extends AppCompatActivity {
 
@@ -66,6 +67,9 @@ public class FewRefilleActivity extends AppCompatActivity {
     TextView tvSave, tvCancel;
     TextView currentTimeStamp;
     TextInputEditText etVolume;
+    Boolean isInternetPresent = false;
+    ConnectionDetector cd;
+    DBHelper dbHelper;
     private String from = "";
     private String path = "";
     private String CarDriverPhotoFilename = "";
@@ -73,7 +77,6 @@ public class FewRefilleActivity extends AppCompatActivity {
     private String FuelDispenserAfterRefillPhotoFilename = "";
     private ProgressDialog dialog;
     private CharSequence mText;
-
     private FirebaseAnalytics mFirebaseAnalytics;
 
     private void fireAnalytics(String arg1, String arg2) {
@@ -93,6 +96,7 @@ public class FewRefilleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_few_refille);
 
+        dbHelper = new DBHelper(FewRefilleActivity.this);
         AndroidNetworking.initialize(FewRefilleActivity.this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(FewRefilleActivity.this);
 
@@ -110,7 +114,11 @@ public class FewRefilleActivity extends AppCompatActivity {
         etVolume = findViewById(R.id.etVolume);
         rl_main = findViewById(R.id.rl_main);
 
-        tvVehicalNol.setText(Const.vehicalNo);
+        if (!Const.vehicalNo.equals("")) {
+            tvVehicalNol.setText(Const.vehicalNo);
+        } else {
+            tvVehicalNol.setText(dbHelper.getScanCode());
+        }
 
         if (Const.currentTimeStamp.equals("")) {
             String dateString = DateFormat.format("dd-MMM-yyyy hh:mm a", new Date(System.currentTimeMillis())).toString();
@@ -120,34 +128,25 @@ public class FewRefilleActivity extends AppCompatActivity {
         }
         currentTimeStamp.setText(Const.currentTimeStamp);
 
-        imgCarDriver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                from = "carDriver";
-                fireAnalytics("Car_Driver Picture click", Const.vehicalNo);
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-            }
+        imgCarDriver.setOnClickListener(v -> {
+            from = "carDriver";
+            fireAnalytics("Car_Driver Picture click", Const.vehicalNo);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
         });
 
-        imgBeforeRefill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                from = "beforeRefill";
-                fireAnalytics("fuel refill dispenser Before picture", Const.vehicalNo);
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST1);
-            }
+        imgBeforeRefill.setOnClickListener(v -> {
+            from = "beforeRefill";
+            fireAnalytics("fuel refill dispenser Before picture", Const.vehicalNo);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST1);
         });
 
-        imgAfterRefill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                from = "afterRefill";
-                fireAnalytics("fuel refill dispenser After picture", Const.vehicalNo);
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST2);
-            }
+        imgAfterRefill.setOnClickListener(v -> {
+            from = "afterRefill";
+            fireAnalytics("fuel refill dispenser After picture", Const.vehicalNo);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST2);
         });
 
         imgBack.setOnClickListener(v -> onBackPressed());
@@ -179,25 +178,31 @@ public class FewRefilleActivity extends AppCompatActivity {
             }
         });
 
-        tvSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        tvSave.setOnClickListener(v -> {
 
-                if (Const.carDriver != null && !Const.carDriver.equals("")
-                        && Const.beforeRefill != null && !Const.beforeRefill.equals("")
-                        && Const.afterRefill != null && !Const.afterRefill.equals("")
-                        && !etVolume.getText().toString().equals("")) {
-                    if (Const.isInternetConnected(FewRefilleActivity.this)) {
-                        new LongOperation().execute();
-                    } else {
-                        Toast.makeText(FewRefilleActivity.this, "Please check your internet connection...", Toast.LENGTH_SHORT).show();
-                    }
+            if (Const.carDriver != null && !Const.carDriver.equals("")
+                    && Const.beforeRefill != null && !Const.beforeRefill.equals("")
+                    && Const.afterRefill != null && !Const.afterRefill.equals("")
+                    && !etVolume.getText().toString().equals("")) {
+                if (Const.isInternetConnected(FewRefilleActivity.this)) {
+                    new LongOperation().execute();
                 } else {
-                    Toast.makeText(FewRefilleActivity.this, "Please enter all the details first.", Toast.LENGTH_SHORT).show();
+                    String FuelRefilled = String.format("%.2f", Float.parseFloat(etVolume.getText().toString().trim()));
+                    String scanCode = dbHelper.getScanCode();
+                    boolean isInsert = dbHelper.updateFuelNoRecords(String.valueOf(dbHelper.getId()), scanCode, String.valueOf(Const.vehicalID), Const.carDriver, Const.beforeRefill, Const.afterRefill, FuelRefilled, Const.currentTimeStamp1);
+                    Log.e("LLL_Insert: ", String.valueOf(isInsert));
+                    runOnUiThread(() -> Toasty.error(FewRefilleActivity.this, "No Internet Connection, please wait while you're in a network state", Toasty.LENGTH_LONG).show());
+                    Intent intent = new Intent(FewRefilleActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
+            } else {
+                Toast.makeText(FewRefilleActivity.this, "Please enter all the details first.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        cd = new ConnectionDetector(getApplicationContext());
+        isInternetPresent = cd.isConnectingToInternet();
     }
 
     @Override
@@ -265,7 +270,7 @@ public class FewRefilleActivity extends AppCompatActivity {
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "IMG_", null);
         return Uri.parse(path);
     }
 
@@ -281,33 +286,6 @@ public class FewRefilleActivity extends AppCompatActivity {
             }
         }
         return path;
-    }
-
-    private String SaveImage(Bitmap finalBitmap) {
-        File wallpaperDirectory = new File(Const.IMAGE_PATH);
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-        boolean isDelete = false;
-
-        File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".png");
-        try {
-            f.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File file = new File(f.getAbsolutePath());
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
     }
 
     private void uploadCarFile(File file) {
@@ -442,6 +420,7 @@ public class FewRefilleActivity extends AppCompatActivity {
                                 if (tempFolder.exists())
                                     tempFolder.delete();
                                 Const.clearData();
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -528,7 +507,18 @@ public class FewRefilleActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            uploadCarFile(new File(Const.carDriver));
+            if (isInternetPresent)
+                uploadCarFile(new File(Const.carDriver));
+            else {
+                String FuelRefilled = String.format("%.2f", Float.parseFloat(etVolume.getText().toString().trim()));
+                String scanCode = dbHelper.getScanCode();
+                boolean isInsert = dbHelper.updateFuelNoRecords(String.valueOf(dbHelper.getId()), scanCode, String.valueOf(Const.vehicalID), Const.carDriver, Const.beforeRefill, Const.afterRefill, FuelRefilled, Const.currentTimeStamp1);
+                Log.e("LLL_Insert: ", String.valueOf(isInsert));
+                runOnUiThread(() -> Toasty.error(FewRefilleActivity.this, "No Internet Connection, please wait while you're in a network state", Toasty.LENGTH_LONG).show());
+                Intent intent = new Intent(FewRefilleActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
             return "Executed";
         }
 

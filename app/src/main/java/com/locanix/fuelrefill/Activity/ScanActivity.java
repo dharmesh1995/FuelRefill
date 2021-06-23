@@ -23,12 +23,15 @@ import com.google.gson.Gson;
 import com.google.zxing.Result;
 import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.BuildConfig;
+import com.locanix.fuelrefill.DBHelper.DBHelper;
 import com.locanix.fuelrefill.Model.VehicalList.DataItem;
 import com.locanix.fuelrefill.Model.VehicalList.VehicleListResponse;
 import com.locanix.fuelrefill.R;
 import com.locanix.fuelrefill.Utils.Const;
 
 import org.json.JSONObject;
+
+import es.dmoral.toasty.Toasty;
 
 public class ScanActivity extends BaseActivity {
 
@@ -39,6 +42,7 @@ public class ScanActivity extends BaseActivity {
     String from = "";
     private CodeScanner mCodeScanner;
     private FirebaseAnalytics mFirebaseAnalytics;
+    DBHelper dbHelper;
 
     private void fireAnalytics(String arg1, String arg2) {
         Bundle bundle = new Bundle();
@@ -58,6 +62,7 @@ public class ScanActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
+        dbHelper = new DBHelper(ScanActivity.this);
         AndroidNetworking.initialize(ScanActivity.this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(ScanActivity.this);
 
@@ -75,7 +80,13 @@ public class ScanActivity extends BaseActivity {
                 if (Const.isInternetConnected(ScanActivity.this)) {
                     runOnUiThread(() -> getVehicleList(result.toString()));
                 } else {
-                    Toast.makeText(ScanActivity.this, "Please check your internet connection...", Toast.LENGTH_SHORT).show();
+                    Log.e("LLLL_Data: ", result.toString());
+                    dbHelper.insertNoPillsDetails(result.toString());
+                    Intent intent;
+                    intent = new Intent(ScanActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    runOnUiThread(() -> Toasty.error(ScanActivity.this, "No Internet Connection, please wait while you're in a network state", Toasty.LENGTH_LONG).show());
                 }
             }
         });

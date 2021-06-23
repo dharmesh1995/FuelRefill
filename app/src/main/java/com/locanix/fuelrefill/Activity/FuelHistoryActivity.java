@@ -20,8 +20,11 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.gson.Gson;
 import com.locanix.fuelrefill.Adapter.FuelHistoryAdapter;
+import com.locanix.fuelrefill.Adapter.FuelPendingData;
 import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.BuildConfig;
+import com.locanix.fuelrefill.DBHelper.DBHelper;
+import com.locanix.fuelrefill.Model.EntryFuel.FuelRefill;
 import com.locanix.fuelrefill.Model.FuelHistory.DataItem;
 import com.locanix.fuelrefill.Model.FuelHistory.FuelHistoryResponse;
 import com.locanix.fuelrefill.R;
@@ -42,8 +45,11 @@ public class FuelHistoryActivity extends BaseActivity {
     RelativeLayout rl_main;
 
     FuelHistoryAdapter fuelHistoryAdapter;
+    FuelPendingData fuelPendingData;
     ArrayList<DataItem> dataItems = new ArrayList<>();
+    ArrayList<FuelRefill> fuelRefills = new ArrayList<>();
 
+    DBHelper dbHelper;
     private ProgressDialog dialog;
 
     @Override
@@ -56,6 +62,7 @@ public class FuelHistoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuel_history);
 
+        dbHelper = new DBHelper(FuelHistoryActivity.this);
         AndroidNetworking.initialize(FuelHistoryActivity.this);
 
         dialog = new ProgressDialog(FuelHistoryActivity.this);
@@ -86,9 +93,24 @@ public class FuelHistoryActivity extends BaseActivity {
         rvImages = findViewById(R.id.rvImages);
         rvImages.setLayoutManager(new LinearLayoutManager(FuelHistoryActivity.this, RecyclerView.VERTICAL, false));
         fuelHistoryAdapter = new FuelHistoryAdapter(dataItems, FuelHistoryActivity.this);
-        rvImages.setAdapter(fuelHistoryAdapter);
 
-        getHistoryData(_7daysBeforeDate, tomorrowDate);
+        if (!Const.isInternetConnected(FuelHistoryActivity.this)) {
+            fuelRefills.clear();
+            ArrayList<FuelRefill> fuelRefills1;
+            fuelRefills1 = dbHelper.getPillsNoRecords();
+            for (int i = 0; i < fuelRefills1.size(); i++) {
+                FuelRefill fuelRefill = fuelRefills1.get(i);
+                if (fuelRefill.getFDriver() != null && !fuelRefill.getFDriver().equals("")) {
+                    fuelRefills.add(fuelRefill);
+                }
+            }
+            fuelPendingData = new FuelPendingData(fuelRefills, FuelHistoryActivity.this);
+            rvImages.setAdapter(fuelPendingData);
+        } else {
+            rvImages.setAdapter(fuelHistoryAdapter);
+            getHistoryData(_7daysBeforeDate, tomorrowDate);
+        }
+
     }
 
     @Override

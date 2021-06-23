@@ -24,7 +24,7 @@
             android:id="@+id/tvRefill"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:text="Fuel Refill History for"
+            android:text="Fuel Refill for"
             android:textSize="@dimen/_15sdp"
             android:textColor="@color/white"
             android:layout_centerInParent="true"

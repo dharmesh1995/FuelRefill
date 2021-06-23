@@ -10,7 +10,10 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.R;
+import com.locanix.fuelrefill.Service.AlarmReceiver;
 import com.locanix.fuelrefill.Utils.Const;
+
+import java.util.Calendar;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -38,6 +41,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Calendar calendar = Calendar.getInstance();
+        new AlarmReceiver().setRepeatAlarm(getApplicationContext(), 1001, calendar);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
 
         cvNewRefill = findViewById(R.id.cvNewRefill);

@@ -1,2 +1,2 @@
-include ':app',':cameraview'
+include ':app'
 rootProject.name = "Fuel Refill"
