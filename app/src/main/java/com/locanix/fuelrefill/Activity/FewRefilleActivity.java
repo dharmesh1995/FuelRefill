@@ -209,60 +209,66 @@ public class FewRefilleActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_PIC_REQUEST) {
-            Bitmap image = (Bitmap) data.getExtras().get("data");
+            if (data != null) {
+                Bitmap image = (Bitmap) data.getExtras().get("data");
 
-            Glide
-                    .with(FewRefilleActivity.this)
-                    .load(image)
-                    .into(imgCarDriver);
+                Glide
+                        .with(FewRefilleActivity.this)
+                        .load(image)
+                        .into(imgCarDriver);
 
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri tempUri = getImageUri(getApplicationContext(), image);
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                Uri tempUri = getImageUri(getApplicationContext(), image);
 
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            File finalFile = new File(getRealPathFromURI(tempUri));
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
 
-            Log.e("LLLL_data: ", finalFile.getAbsolutePath());
+                Log.e("LLLL_data: ", finalFile.getAbsolutePath());
 
-            Const.carDriver = finalFile.getAbsolutePath();
+                Const.carDriver = finalFile.getAbsolutePath();
+            }
 
         } else if (requestCode == CAMERA_PIC_REQUEST1) {
 
-            Bitmap image = (Bitmap) data.getExtras().get("data");
+            if (data != null) {
+                Bitmap image = (Bitmap) data.getExtras().get("data");
 
-            Glide
-                    .with(FewRefilleActivity.this)
-                    .load(image)
-                    .into(imgBeforeRefill);
+                Glide
+                        .with(FewRefilleActivity.this)
+                        .load(image)
+                        .into(imgBeforeRefill);
 
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri tempUri = getImageUri(getApplicationContext(), image);
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                Uri tempUri = getImageUri(getApplicationContext(), image);
 
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            File finalFile = new File(getRealPathFromURI(tempUri));
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
 
-            Log.e("LLLL_data: ", finalFile.getAbsolutePath());
+                Log.e("LLLL_data: ", finalFile.getAbsolutePath());
 
-            Const.beforeRefill = finalFile.getAbsolutePath();
+                Const.beforeRefill = finalFile.getAbsolutePath();
+            }
 
         } else if (requestCode == CAMERA_PIC_REQUEST2) {
+            if (data != null) {
 
-            Bitmap image = (Bitmap) data.getExtras().get("data");
+                Bitmap image = (Bitmap) data.getExtras().get("data");
 
-            Glide
-                    .with(FewRefilleActivity.this)
-                    .load(image)
-                    .into(imgAfterRefill);
+                Glide
+                        .with(FewRefilleActivity.this)
+                        .load(image)
+                        .into(imgAfterRefill);
 
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri tempUri = getImageUri(getApplicationContext(), image);
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                Uri tempUri = getImageUri(getApplicationContext(), image);
 
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            File finalFile = new File(getRealPathFromURI(tempUri));
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
 
-            Log.e("LLLL_data: ", finalFile.getAbsolutePath());
+                Log.e("LLLL_data: ", finalFile.getAbsolutePath());
 
-            Const.afterRefill = finalFile.getAbsolutePath();
+                Const.afterRefill = finalFile.getAbsolutePath();
+            }
 
         }
     }
