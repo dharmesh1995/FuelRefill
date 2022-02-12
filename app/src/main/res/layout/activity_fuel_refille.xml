@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Activity.FuelRefilleActivity">
+
+    <LinearLayout
+        android:id="@+id/rltop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/_15sdp"
+        android:background="@drawable/ic_top_background">
+
+        <TextView
+            android:id="@+id/tvRefill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fuel Refill For"
+            android:textSize="@dimen/_18sdp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:fontFamily="@font/sf_ui_displa_heavy"/>
+
+        <TextView
+            android:id="@+id/tvVehicalNol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_ui_displa_heavy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rltop"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_above="@+id/llBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_5sdp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Car &amp; Driver"
+                        android:textSize="@dimen/_13sdp"
+                        android:textColor="@color/black" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgCarDriver"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:src="@drawable/ic_camero"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="@color/view_color"
+                    android:layout_margin="@dimen/_5sdp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fuel Dispenser (Before Refill)"
+                        android:textSize="@dimen/_13sdp"
+                        android:textColor="@color/black" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgBeforeRefill"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:src="@drawable/ic_camero"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="@color/view_color"
+                    android:layout_margin="@dimen/_5sdp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fuel Dispenser (After Refill)"
+                        android:textSize="@dimen/_13sdp"
+                        android:textColor="@color/black" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgAfterRefill"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:src="@drawable/ic_camero"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="@color/view_color"
+                    android:layout_margin="@dimen/_5sdp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fuel Refilled"
+                    android:textSize="@dimen/_13sdp"
+                    android:textColor="@color/black"
+                    android:layout_margin="@dimen/_5sdp"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etVolume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0.00"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/text_color"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:background="@drawable/edit_background"
+                    android:paddingVertical="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_13sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp" />
+
+                <TextView
+                    android:layout_below="@+id/tvRefill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time of Refill"
+                    android:textSize="@dimen/_13sdp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"/>
+
+                <TextView
+                    android:id="@+id/currentTimeStamp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="26-03-2021  10:30:17"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:background="@drawable/edit_background"
+                    android:paddingVertical="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_13sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/llBottom"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/tvSave"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:background="@drawable/image_background"
+                android:backgroundTint="#FF9A3E"
+                android:text="SAVE"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/tvCancel"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:background="@drawable/image_background"
+                android:backgroundTint="#F44771"
+                android:text="Cancel"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="@dimen/_13sdp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

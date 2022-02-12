@@ -1,13 +1,8 @@
 package com.locanix.fuelrefill.Activity;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +18,14 @@ import com.locanix.fuelrefill.Adapter.FuelHistoryAdapter;
 import com.locanix.fuelrefill.Adapter.FuelPendingData;
 import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.BuildConfig;
-import com.locanix.fuelrefill.DBHelper.DBHelper;
+import com.locanix.fuelrefill.DataBase.DBHelper;
 import com.locanix.fuelrefill.Model.EntryFuel.FuelRefill;
 import com.locanix.fuelrefill.Model.FuelHistory.DataItem;
 import com.locanix.fuelrefill.Model.FuelHistory.FuelHistoryResponse;
+import com.locanix.fuelrefill.ProgressBar.Progressbar;
 import com.locanix.fuelrefill.R;
 import com.locanix.fuelrefill.Utils.Const;
+import com.locanix.fuelrefill.Utils.Key;
 
 import org.json.JSONObject;
 
@@ -42,7 +39,6 @@ public class FuelHistoryActivity extends BaseActivity {
     ImageView imgBack;
     RecyclerView rvImages;
     TextView tvVehicalNol;
-    RelativeLayout rl_main;
 
     FuelHistoryAdapter fuelHistoryAdapter;
     FuelPendingData fuelPendingData;
@@ -50,7 +46,7 @@ public class FuelHistoryActivity extends BaseActivity {
     ArrayList<FuelRefill> fuelRefills = new ArrayList<>();
 
     DBHelper dbHelper;
-    private ProgressDialog dialog;
+    private Progressbar progressbar;
 
     @Override
     public void permissionGranted() {
@@ -65,14 +61,13 @@ public class FuelHistoryActivity extends BaseActivity {
         dbHelper = new DBHelper(FuelHistoryActivity.this);
         AndroidNetworking.initialize(FuelHistoryActivity.this);
 
-        dialog = new ProgressDialog(FuelHistoryActivity.this);
+        progressbar = new Progressbar(FuelHistoryActivity.this);
 
         imgBack = findViewById(R.id.imgBack);
-        rl_main = findViewById(R.id.rl_main);
         tvVehicalNol = findViewById(R.id.tvVehicalNol);
         imgBack.setOnClickListener(v -> onBackPressed());
 
-        tvVehicalNol.setText(Const.vehicalNo);
+        tvVehicalNol.setText(getIntent().getStringExtra(Key.VehicleNumber));
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -87,14 +82,12 @@ public class FuelHistoryActivity extends BaseActivity {
 
         String _7daysBeforeDate = DateFormat.format("dd/MM/yyyy", newDate).toString();
 
-        Log.e("LLLL_tomorrow: ", tomorrowDate);
-        Log.e("LLLL_7daysBeforeDate: ", _7daysBeforeDate);
-
         rvImages = findViewById(R.id.rvImages);
         rvImages.setLayoutManager(new LinearLayoutManager(FuelHistoryActivity.this, RecyclerView.VERTICAL, false));
         fuelHistoryAdapter = new FuelHistoryAdapter(dataItems, FuelHistoryActivity.this);
 
         if (!Const.isInternetConnected(FuelHistoryActivity.this)) {
+
             fuelRefills.clear();
             ArrayList<FuelRefill> fuelRefills1;
             fuelRefills1 = dbHelper.getPillsNoRecords();
@@ -115,18 +108,14 @@ public class FuelHistoryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(FuelHistoryActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        super.onBackPressed();
     }
 
     private void getHistoryData(String fromDate, String toDate) {
-        runOnUiThread(() -> {
-            rl_main.setVisibility(View.VISIBLE);
-        });
+        progressbar.show();
         AndroidNetworking.get(BuildConfig.BASE_URL + "fuel/history")
                 .addHeaders("token", BuildConfig.TOKRN)
-                .addQueryParameter("vehicleId", String.valueOf(Const.vehicalID))
+                .addQueryParameter("vehicleId", getIntent().getStringExtra(Key.VehicleId))
                 .addQueryParameter("fromDate", fromDate)
                 .addQueryParameter("toDate", toDate)
                 .setPriority(Priority.IMMEDIATE)
@@ -134,18 +123,24 @@ public class FuelHistoryActivity extends BaseActivity {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
+
                         FuelHistoryResponse fuelHistoryResponse = new Gson().fromJson(response.toString(), FuelHistoryResponse.class);
+
                         if (fuelHistoryResponse.isSuccess()) {
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     Collections.reverse(fuelHistoryResponse.getData());
+
                                     fuelHistoryAdapter.addAll(fuelHistoryResponse.getData());
-                                    runOnUiThread(() -> {
-                                        rl_main.setVisibility(View.GONE);
-                                    });
+                                    if (progressbar.isShowing()){
+                                        progressbar.dismiss();
+                                    }
                                 }
                             });
+
                         } else {
                             Toast.makeText(FuelHistoryActivity.this, fuelHistoryResponse.getError(), Toast.LENGTH_SHORT).show();
                         }

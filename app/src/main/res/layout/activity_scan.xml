@@ -4,67 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background"
     tools:context=".Activity.ScanActivity">
 
-    <RelativeLayout
-        android:id="@+id/rlTop"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/imgLogo"
-            android:layout_width="@dimen/_150sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/locanix_logo"
-            android:layout_marginTop="?actionBarSize"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"/>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_scan_vactor"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvScan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/_8sdp"
-            app:cardBackgroundColor="@color/white"
-            android:layout_marginVertical="@dimen/_40sdp"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/scan_qr_code"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/sf_ui_display_bold"
-                    android:textColor="@color/black"
-                    android:paddingVertical="@dimen/_15sdp"
-                    android:paddingHorizontal="@dimen/_30sdp"
-                    android:textSize="@dimen/_13sdp"/>
-
-            </LinearLayout>
-
-
-        </com.google.android.material.card.MaterialCardView>
-
-
-    </RelativeLayout>
-
     <FrameLayout
-        android:id="@+id/frameBottom"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -86,4 +28,5 @@
             app:maskColor="#77000000"/>
 
     </FrameLayout>
+
 </RelativeLayout>

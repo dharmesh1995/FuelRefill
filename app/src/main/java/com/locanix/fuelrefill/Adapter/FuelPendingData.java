@@ -36,9 +36,11 @@ public class FuelPendingData extends RecyclerView.Adapter<FuelPendingData.MyClas
 
     @Override
     public void onBindViewHolder(@NonNull FuelPendingData.MyClassView holder, int position) {
+
         FuelRefill dataItem = dataItems.get(position);
 
         try {
+
             String dateString = dataItem.getTimeOfRefill();
 
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

@@ -60,8 +60,8 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/tvVolume"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/tvVolume"
             android:text="Date"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp" />
@@ -91,30 +91,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view1"
-        android:layout_margin="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="7dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/list_fuel_refill_history" />
-
-    <RelativeLayout
-        android:id="@+id/rl_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#4D000000"
-        android:visibility="gone">
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/loader"
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="@dimen/_120sdp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginBottom="-35dp"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="truck_loader3.json"
-            android:layout_centerInParent="true"
-            app:lottie_loop="true" />
-
-
-    </RelativeLayout>
 
 </RelativeLayout>

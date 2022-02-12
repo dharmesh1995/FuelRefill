@@ -1,88 +1,60 @@
 package com.locanix.fuelrefill.Activity;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.R;
-import com.locanix.fuelrefill.Service.AlarmReceiver;
-import com.locanix.fuelrefill.Utils.Const;
+import com.locanix.fuelrefill.Service.Receiver;
+import com.locanix.fuelrefill.SettingActivity;
 
-import java.util.Calendar;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    MaterialCardView scanQrCode;
+    private ImageView imgSetting;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
-
-    MaterialCardView cvNewRefill, cvRefillHistory;
-    TextView tvVehicalNol;
-    ImageView imgBack;
-
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    @Override
-    public void permissionGranted() {
-
-    }
-
-    private void fireAnalytics(String arg1, String arg2) {
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, arg1);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, arg2);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
-    }
+    private BroadcastReceiver receiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_main);
 
-        Calendar calendar = Calendar.getInstance();
-        new AlarmReceiver().setRepeatAlarm(getApplicationContext(), 1001, calendar);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
+        receiver = new Receiver();
+        registerReceiver(receiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        cvNewRefill = findViewById(R.id.cvNewRefill);
-        cvRefillHistory = findViewById(R.id.cvRefillHistory);
-        tvVehicalNol = findViewById(R.id.tvVehicalNol);
-        imgBack = findViewById(R.id.imgBack);
+        inti();
 
-        cvNewRefill.setOnClickListener(this);
-        cvRefillHistory.setOnClickListener(this);
-        imgBack.setOnClickListener(this);
+    }
 
-        tvVehicalNol.setText(Const.vehicalNo);
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    private void inti() {
+        imgSetting = findViewById(R.id.imgSetting);
+        imgSetting.setOnClickListener(this);
+        scanQrCode = findViewById(R.id.scanQrCode);
+        scanQrCode.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.cvNewRefill:
-                fireAnalytics("New Fuel Refill Click", Const.vehicalNo);
-                Intent intent = new Intent(MainActivity.this, FewRefilleActivity.class);
-                intent.putExtra("from", "newRefill");
+        switch (v.getId()){
+            case R.id.imgSetting:
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.cvRefillHistory:
-                fireAnalytics("Fuel Refill History View", Const.vehicalNo);
-                Intent intent1 = new Intent(MainActivity.this, FuelHistoryActivity.class);
-                intent1.putExtra("from", "refillHistory");
-                startActivity(intent1);
-                break;
-            case R.id.imgBack:
-                onBackPressed();
+            case R.id.scanQrCode:
+                startActivity(new Intent(this,ScanActivity.class));
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(MainActivity.this, ScanActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

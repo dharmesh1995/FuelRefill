@@ -37,6 +37,7 @@ public class FuelHistoryAdapter extends RecyclerView.Adapter<FuelHistoryAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MyClassView holder, int position) {
+
         DataItem dataItem = dataItems.get(position);
 
         try {

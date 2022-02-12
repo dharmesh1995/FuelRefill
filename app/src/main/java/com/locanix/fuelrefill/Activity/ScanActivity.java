@@ -3,53 +3,50 @@ package com.locanix.fuelrefill.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 import com.google.zxing.Result;
 import com.locanix.fuelrefill.BaseActivity;
 import com.locanix.fuelrefill.BuildConfig;
-import com.locanix.fuelrefill.DBHelper.DBHelper;
-import com.locanix.fuelrefill.Model.VehicalList.DataItem;
-import com.locanix.fuelrefill.Model.VehicalList.VehicleListResponse;
+import com.locanix.fuelrefill.Model.ScanModel;
+import com.locanix.fuelrefill.ProgressBar.Progressbar;
 import com.locanix.fuelrefill.R;
+import com.locanix.fuelrefill.Retrofit.APIClient;
+import com.locanix.fuelrefill.Retrofit.APIInterface;
+import com.locanix.fuelrefill.SendMail;
 import com.locanix.fuelrefill.Utils.Const;
+import com.locanix.fuelrefill.Utils.Key;
 
-import org.json.JSONObject;
+import java.util.List;
 
-import es.dmoral.toasty.Toasty;
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ScanActivity extends BaseActivity {
 
-    MaterialCardView cvScan;
-    FrameLayout frameBottom;
-    RelativeLayout rlTop;
     CodeScannerView scanner_view;
     String from = "";
     private CodeScanner mCodeScanner;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    DBHelper dbHelper;
+    //private FirebaseAnalytics mFirebaseAnalytics;
+    private Progressbar progressbar;
+    private boolean exist = false;
+
 
     private void fireAnalytics(String arg1, String arg2) {
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, arg1);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, arg2);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        //mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        //mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
     }
 
     @Override
@@ -61,42 +58,47 @@ public class ScanActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        ButterKnife.bind(ScanActivity.this);
 
-        dbHelper = new DBHelper(ScanActivity.this);
+        progressbar = new Progressbar(this);
         AndroidNetworking.initialize(ScanActivity.this);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(ScanActivity.this);
+        //mFirebaseAnalytics = FirebaseAnalytics.getInstance(ScanActivity.this);
 
         from = getIntent().getStringExtra("from");
 
-        cvScan = findViewById(R.id.cvScan);
-        rlTop = findViewById(R.id.rlTop);
-        frameBottom = findViewById(R.id.frameBottom);
         scanner_view = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(ScanActivity.this, scanner_view);
+        mCodeScanner.startPreview();
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
+
                 fireAnalytics("Scan QR Code", result.toString());
+                Log.e("Test","Resu "+result.toString());
+
                 if (Const.isInternetConnected(ScanActivity.this)) {
-                    runOnUiThread(() -> getVehicleList(result.toString()));
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressbar.show();
+                        }
+                    });
+
+                    getVehicleList(result.toString());
+
                 } else {
-                    Log.e("LLLL_Data: ", result.toString());
-                    dbHelper.insertNoPillsDetails(result.toString());
-                    Intent intent;
-                    intent = new Intent(ScanActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    runOnUiThread(() -> Toasty.error(ScanActivity.this, "No Internet Connection, please wait while you're in a network state", Toasty.LENGTH_LONG).show());
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                            Toast.makeText(getApplicationContext(),"No Internet Connection, please wait while you're in a network state",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
-
-        cvScan.setOnClickListener(v -> {
-            rlTop.setVisibility(View.GONE);
-            frameBottom.setVisibility(View.VISIBLE);
-            mCodeScanner.startPreview();
-        });
-
     }
 
     @Override
@@ -112,45 +114,58 @@ public class ScanActivity extends BaseActivity {
     }
 
     private void getVehicleList(String scanCode) {
-        AndroidNetworking.get(BuildConfig.BASE_URL + "vehicles")
-                .addHeaders("token", BuildConfig.TOKRN)
-                .addHeaders("Content-Type", "application/json")
-                .setPriority(Priority.IMMEDIATE)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        VehicleListResponse vehicleListResponse = new Gson().fromJson(response.toString(), VehicleListResponse.class);
-                        Log.v("LLLL_Response: ", vehicleListResponse.toString());
-                        if (vehicleListResponse.isSuccess()) {
-                            for (int i = 0; i < vehicleListResponse.getData().size(); i++) {
-                                DataItem dataItem = vehicleListResponse.getData().get(i);
-                                if (dataItem.getDescription() != null) {
-                                    if (dataItem.getDescription().equals(scanCode)) {
-                                        Const.vehicalNo = dataItem.getVehiclenumber();
-                                        Const.vehicalID = dataItem.getVehicleid();
-                                        Intent intent;
-                                        intent = new Intent(ScanActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }
-                            }
-                        } else {
-                            Toast.makeText(ScanActivity.this, "Something went wrong....", Toast.LENGTH_SHORT).show();
+
+        Call<ScanModel> call1 = APIClient.getClient().create(APIInterface.class).getVehicleResponse(BuildConfig.TOKRN,"application/json");
+
+        call1.enqueue(new Callback<ScanModel>() {
+            @Override
+            public void onResponse(@NonNull Call<ScanModel> call, @NonNull Response<ScanModel> response) {
+
+                List<ScanModel.DataItem> list = response.body().data;
+
+                for (int i=0;i<list.size();i++){
+
+                    if (list.get(i).description != null) {
+
+                        if (list.get(i).description.equals(scanCode)) {
+
+                            exist = true;
+                            Intent intent = new Intent(ScanActivity.this, HomeActivity.class);
+                            intent.putExtra(Key.VehicleNumber,list.get(i).vehiclenumber);
+                            intent.putExtra(Key.VehicleId,String.valueOf(list.get(i).vehicleid));
+                            startActivity(intent);
+                            finish();
+
+                        }else {
+
+                           /* Log.e("server_response", " onResponse: "+list.get(0).description);*/
                         }
                     }
+                }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e("LLLL_Error: ", anError.getErrorDetail());
-                    }
-                });
+                if (!exist) {
+                    Toast.makeText(getApplicationContext(),"QR Code not valid.",Toast.LENGTH_LONG).show();
+                    SendMail sm = new SendMail(ScanActivity.this, "vibeplen@gmail.com", "QR Code not valid",scanCode);
+                    sm.execute();
+                    finish();
+                }
+
+                if (progressbar.isShowing()){
+                    progressbar.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ScanModel> call, @NonNull Throwable t) {
+                call.cancel();
+
+
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finishAffinity();
     }
 }

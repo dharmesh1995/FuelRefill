@@ -28,6 +28,7 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             Calendar calendar = Calendar.getInstance();
             new AlarmReceiver().setRepeatAlarm(context, 99526463, calendar);

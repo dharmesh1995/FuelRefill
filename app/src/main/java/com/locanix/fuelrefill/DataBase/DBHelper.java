@@ -1,4 +1,4 @@
-package com.locanix.fuelrefill.DBHelper;
+package com.locanix.fuelrefill.DataBase;
 
 import android.content.ContentValues;
 import android.content.Context;

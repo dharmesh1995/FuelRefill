@@ -5,121 +5,139 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_background"
-    tools:context=".Activity.MainActivity">
-
-    <ImageView
-        android:id="@+id/imgBack"
-        android:layout_width="?actionBarSize"
-        android:layout_height="?actionBarSize"
-        android:padding="@dimen/_11sdp"
-        android:src="@drawable/ic_left_arrow" />
-
-    <TextView
-        android:id="@+id/tvVehicalNol"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvRefill"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/_60sdp"
-        android:fontFamily="@font/sf_ui_display_bold"
-        android:text="AS0534CE06"
-        android:textColor="@color/black"
-        android:layout_centerInParent="true"
-        android:textSize="@dimen/_20sdp"
-        android:textStyle="bold"
-        android:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/imgVector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_home_group"
-        android:layout_centerInParent="true"
-        android:layout_above="@+id/llBottom"
-        android:layout_below="@+id/imgLogo"/>
+    tools:context=".Activity.HomeActivity">
 
     <LinearLayout
-        android:id="@+id/llBottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:layout_marginVertical="@dimen/_40sdp"
-        android:layout_marginHorizontal="@dimen/_30sdp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvNewRefill"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_2sdp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/_7sdp"
-                android:paddingHorizontal="@dimen/_9sdp">
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="?actionBarSize"
+                android:layout_height="?actionBarSize"
+                android:padding="@dimen/_11sdp"
+                android:src="@drawable/ic_left_arrow" />
+        </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imgPump"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_pump_group"
-                    android:layout_alignParentLeft="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/new_fuel_refill"
-                    android:layout_toRightOf="@+id/imgPump"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/_15sdp"
-                    android:fontFamily="@font/sf_ui_display_bold"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"/>
-
-            </RelativeLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvRefillHistory"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:layout_marginTop="@dimen/_15sdp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp">
 
-            <RelativeLayout
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:src="@drawable/locanix_logo" />
+
+            <TextView
+                android:id="@+id/tvVehicalNol"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/_7sdp"
-                android:paddingHorizontal="@dimen/_9sdp">
+                android:gravity="center"
+                android:fontFamily="@font/sf_ui_display_bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_5sdp"/>
 
-                <ImageView
-                    android:id="@+id/imgHistory"
-                    android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/imgVector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_group"
+                android:layout_marginTop="@dimen/_5sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvNewRefill"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_history_group"
-                    android:layout_alignParentLeft="true"/>
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_2sdp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_9sdp">
+
+                        <ImageView
+                            android:id="@+id/imgPump"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_pump_group"
+                            android:layout_alignParentLeft="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/new_fuel_refill"
+                            android:layout_toRightOf="@+id/imgPump"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/_15sdp"
+                            android:fontFamily="@font/sf_ui_display_bold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"/>
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvRefillHistory"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/fuel_refill_history"
-                    android:layout_toRightOf="@+id/imgHistory"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/_15sdp"
-                    android:fontFamily="@font/sf_ui_display_bold"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"/>
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:layout_marginTop="@dimen/_15sdp">
 
-            </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingHorizontal="@dimen/_9sdp">
 
-        </com.google.android.material.card.MaterialCardView>
+                        <ImageView
+                            android:id="@+id/imgHistory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/ic_history_group" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fuel_refill_history"
+                            android:layout_toRightOf="@+id/imgHistory"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="@dimen/_15sdp"
+                            android:fontFamily="@font/sf_ui_display_bold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"/>
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>
